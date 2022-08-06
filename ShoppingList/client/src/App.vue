@@ -1,14 +1,13 @@
 <template>
-    <img alt="Vue logo" src="./assets/logo.png">
-    <div>
+    <!--<div>
         <button @click="fetch">Fetch from API</button>
-    </div>
-    <HelloWorld :msg="message" />
+    </div>-->
+    <ShoppingList /><!--:msg="message"-->
 </template>
 
 <script>
     import axios from "axios";
-    import HelloWorld from './components/HelloWorld.vue';
+    import ShoppingList from './components/ShoppingList.vue'
 
     export default {
         name: 'App',
@@ -30,7 +29,7 @@
             },
         },
         components: {
-            HelloWorld
+            ShoppingList
         }
     }
 </script>
@@ -40,8 +39,12 @@
         font-family: Avenir, Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        text-align: center;
         color: #2c3e50;
         margin-top: 60px;
     }
+
+    body {
+        padding: 1%;
+    }
+
 </style>
