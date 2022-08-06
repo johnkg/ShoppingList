@@ -127,17 +127,7 @@
 
 
         },
-        //mounted() {
-        //    //this.fetch()
-        //    this.shoppingList = this.shoppingItems ? [...this.shoppingItems] : [];
-        //},
         computed: {
-            //shoppingList() {
-            //    if (this.list && this.list.length == 0)
-            //        this.copyToList();
-
-            //    return this.list;
-            //},
             filteredList() {
                 return this.shoppingList.filter(shoppingItem => {
                     if (this.hasFilter)
