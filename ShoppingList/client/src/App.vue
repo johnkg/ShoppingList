@@ -1,8 +1,5 @@
 <template>
-    <!--<div>
-        <button @click="fetch">Fetch from API</button>
-    </div>-->
-    <ShoppingList /><!--:msg="message"-->
+    <ShoppingList :shoppingItems="shoppingListData"/>
 </template>
 
 <script>
@@ -13,7 +10,7 @@
         name: 'App',
         data() {
             return {
-                message: "Welcome to Your Vue.js App",
+                shoppingListData: []
             };
         },
         methods: {
@@ -22,11 +19,14 @@
                     const url = "http://localhost:39326/api/ShoppingItems";
                     const response = await axios.get(url);
                     const data = response.data;
-                    this.message = data;
+                    this.shoppingListData = data;
                 } catch (error) {
-                    this.message = error;
+                    console.log(error);
                 }
             },
+        },
+        beforeMount() {
+            this.fetch()
         },
         components: {
             ShoppingList

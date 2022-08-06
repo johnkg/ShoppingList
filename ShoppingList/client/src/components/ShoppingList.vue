@@ -1,21 +1,31 @@
 <template>
     <div class="shopping">
-        <!--<h1>{{ msg }}</h1>-->
         <form id="shopping-list">
             <h2>Shopping List</h2>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" v-model="hasFilter" id="flexCheckDefault">
+                <label class="form-check-label" for="checkFilter">
+                    Filter by Subtotal > 20 and Name starts with X
+                </label>
+            </div>
             <table id="shopping-list-table" class="table table-hover">
                 <thead>
                     <tr>
                         <th>Item</th>
-                        <th>Amount</th>
                         <th>Quantity</th>
+                        <th>Subtotal</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tr v-for="(item, index) in itemsList" :key="item">
+                <tr v-for="item in filteredList" :key="item">
                     <td>
-                        <span v-show="!item.inEditMode">{{ item.itemName }}</span>
-                        <input v-bind:placeholder="item.itemName" v-show="item.inEditMode" v-model="item.itemName" class="form-control" />
+                        <span v-show="!item.inEditMode">{{ item.name }}</span>
+                        <input v-bind:placeholder="item.name" v-show="item.inEditMode" v-model="item.name" class="form-control" />
+                    </td>
+
+                    <td>
+                        <span v-show="!item.inEditMode">{{ item.quantity }} pc<span v-show="item.quantity > 1">s</span> </span>
+                        <input type="number" v-bind:placeholder="item.quantity" v-show="item.inEditMode" v-model="item.quantity" class="form-control" />
                     </td>
 
                     <td>
@@ -24,13 +34,9 @@
                     </td>
 
                     <td>
-                        <span v-show="!item.inEditMode">{{ item.quantity }} pc(s) </span>
-                        <input type="number" v-bind:placeholder="item.quantity" v-show="item.inEditMode" v-model="item.quantity" class="form-control" />
-                    </td>
-                    <td>
                         <button type="button" class="btn btn-success" v-show="item.inEditMode" @click="editItemComplete(item)"><i class="fa fa-save"></i> Save  </button>
                         <button type="button" class="btn btn-info" v-show="!item.inEditMode" @click="editItem(item)"><i class="fa fa-edit"></i> Edit  </button>
-                        <button type="button" class="btn btn-danger" @click="removeItem(index)"><i class="fa fa-remove"></i> Delete  </button>
+                        <button type="button" class="btn btn-danger" @click="removeItem()"><i class="fa fa-remove"></i> Delete  </button>
                     </td>
                 </tr>
             </table>
@@ -39,19 +45,19 @@
             <div class="row col-md-6">
                 <div class="col-md-6 form-group">
                     Name
-                    <input type="text" v-model="itemName" class="form-control">
+                    <input type="text" v-model="name" class="form-control">
                 </div>
 
                 <div class="col-md-6 form-group">
-                    Amount
-                    <input type="number" v-model="amount" class="form-control">
+                    Quantity
+                    <input type="number" v-model="quantity" class="form-control" autofocus>
                 </div>
             </div>
 
             <div class="row col-md-6">
                 <div class="col-md-6 form-group">
-                    Quantity
-                    <input type="number" v-model="quantity" class="form-control" autofocus>
+                    Subtotal
+                    <input type="number" v-model="amount" class="form-control">
                 </div>
             </div>
 
@@ -67,61 +73,77 @@
     export default {
         name: 'ShoppingList',
         props: {
-            msg: String
+            shoppingItems: Array
         },
         data() {
             return {
                 quantity: '',
-                itemName: '',
-                // add sample data for now
-                itemsList: [
-                    {
-                        quantity: 3,
-                        amount: 1.5,
-                        itemName: "Apples",
-                        inEditMode: false
-                    },
-                    {
-                        quantity: 6,
-                        amount: 1,
-                        itemName: "Pears",
-                        inEditMode: false
-                    }],
-                inEditMode: false
+                name: '',
+                amount: '',
+                hasFilter: false,
+                inEditMode: false,
+                list: []
             };
         },
         methods: {
-            addItem: function () {
-                var quantityIN = this.quantity;
-                var itemNameIN = this.itemName.trim();
-                this.itemsList.push({
+            addItem () {
+                let quantityIN = this.quantity;
+                let nameIN = this.name.trim();
+                let amountIN = this.amount;
+                this.shoppingList.push({
                     quantity: quantityIN,
-                    itemName: itemNameIN,
+                    name: nameIN,
+                    amount: amountIN,
                     inEditMode: false
                 });
                 this.clearAll();
             },
-            clearQuantity: function () {
+            clearQuantity () {
                 this.quantity = '';
             },
-            clearItemName: function () {
-                this.itemName = '';
+            clearname () {
+                this.name = '';
             },
-            clearAll: function () {
+            clearAmount () {
+                this.amount = '';
+            },
+            clearAll () {
                 this.clearQuantity();
-                this.clearItemName();
+                this.clearname();
+                this.clearAmount();
             },
-            removeItem: function (index) {
-                this.itemsList.splice(index, 1); //delete 1 element from the array at the position index
+            removeItem(item) {
+                if (item) {
+                    let index = this.shoppingList.findIndex(listItem => listItem.id === item.id);
+                    this.shoppingList.splice(index, 1); //delete 1 element from the array at the position index
+                }
             },
-            editItem: function (item) {
+            editItem (item) {
                 item.inEditMode = true;
             },
-            editItemComplete: function (item) {
+            editItemComplete (item) {
                 item.inEditMode = false;
             },
-
+            copyToList() {
+                this.list = this.shoppingItems;
+            }
         },
+        computed: {
+            shoppingList() {
+                if (this.list.length == 0)
+                    this.copyToList();
+
+                return this.list;
+            },
+            filteredList() {
+                return this.shoppingList.filter(shoppingItem => {
+                    if (this.hasFilter)
+                        return shoppingItem.amount > 20 && shoppingItem.name.toLowerCase().startsWith('x');
+                    else
+                        return shoppingItem;
+                });
+            }
+        }
     }
 </script>
 
@@ -139,7 +161,7 @@
 
     #shopping-list-table {
         table-layout: fixed;
-        width: 50%;
+        width: 60%;
         vertical-align: middle;
     }
 

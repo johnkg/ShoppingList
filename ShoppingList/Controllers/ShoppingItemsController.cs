@@ -13,9 +13,9 @@ namespace ShoppingList.Controllers
     [ApiController]
     public class ShoppingItemsController : ControllerBase
     {
-        private readonly ShoppingContext _context;
+        private readonly ShoppingDbContext _context;
 
-        public ShoppingItemsController(ShoppingContext context)
+        public ShoppingItemsController(ShoppingDbContext context)
         {
             _context = context;
         }

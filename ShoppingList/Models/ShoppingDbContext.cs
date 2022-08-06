@@ -2,11 +2,12 @@
 
 namespace ShoppingList.Models
 {
-    public class ShoppingContext : DbContext
+    public class ShoppingDbContext : DbContext
     {
-        public ShoppingContext(DbContextOptions<ShoppingContext> options)
+        public ShoppingDbContext(DbContextOptions<ShoppingDbContext> options)
             : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<ShoppingItem> ShoppingItems { get; set; }
