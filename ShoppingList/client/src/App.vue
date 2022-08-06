@@ -1,5 +1,5 @@
 <template>
-    <ShoppingList :shoppingItems="shoppingListData"/>
+    <ShoppingList v-if="shoppingListData" :shoppingItems="shoppingListData"/>
 </template>
 
 <script>
@@ -10,7 +10,7 @@
         name: 'App',
         data() {
             return {
-                shoppingListData: []
+                shoppingListData: null
             };
         },
         methods: {

@@ -82,11 +82,11 @@
                 amount: '',
                 hasFilter: false,
                 inEditMode: false,
-                list: []
+                shoppingList: this.shoppingItems && this.shoppingItems.length > 1 ? [...this.shoppingItems] : []
             };
         },
         methods: {
-            addItem () {
+            addItem() {
                 let quantityIN = this.quantity;
                 let nameIN = this.name.trim();
                 let amountIN = this.amount;
@@ -98,16 +98,16 @@
                 });
                 this.clearAll();
             },
-            clearQuantity () {
+            clearQuantity() {
                 this.quantity = '';
             },
-            clearname () {
+            clearname() {
                 this.name = '';
             },
-            clearAmount () {
+            clearAmount() {
                 this.amount = '';
             },
-            clearAll () {
+            clearAll() {
                 this.clearQuantity();
                 this.clearname();
                 this.clearAmount();
@@ -118,23 +118,26 @@
                     this.shoppingList.splice(index, 1); //delete 1 element from the array at the position index
                 }
             },
-            editItem (item) {
+            editItem(item) {
                 item.inEditMode = true;
             },
-            editItemComplete (item) {
+            editItemComplete(item) {
                 item.inEditMode = false;
             },
-            copyToList() {
-                this.list = this.shoppingItems;
-            }
-        },
-        computed: {
-            shoppingList() {
-                if (this.list.length == 0)
-                    this.copyToList();
 
-                return this.list;
-            },
+
+        },
+        //mounted() {
+        //    //this.fetch()
+        //    this.shoppingList = this.shoppingItems ? [...this.shoppingItems] : [];
+        //},
+        computed: {
+            //shoppingList() {
+            //    if (this.list && this.list.length == 0)
+            //        this.copyToList();
+
+            //    return this.list;
+            //},
             filteredList() {
                 return this.shoppingList.filter(shoppingItem => {
                     if (this.hasFilter)
